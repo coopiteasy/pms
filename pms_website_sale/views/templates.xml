@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- /room listing -->
+    <template id="rooms" name="Rooms">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Rooms</t>
+
+            <!-- TODO: Order by room type category (or only display one category
+                 per web page) -->
+            <t t-foreach="room_types" t-as="room_type">
+                <t t-call="pms_website_sale.room_item"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="room_item">
+        <div>
+            <h2>Name: <span t-esc="room_type.name" /></h2>
+            <p>Price: <span t-esc="room_type.lst_price" t-options='{"widget":
+            "monetary", "display_currency": company_currency}' /></p>
+            <p>Short description: <span t-esc="room_type.short_description" /></p>
+            <div>
+                <p>Long description (TODO should go on its own page)</p>
+                <!-- t-raw is deprecated in Odoo 15. It'll do for now. -->
+                <t t-raw="room_type.long_description" />
+            </div>
+        </div>
+    </template>
+</odoo>

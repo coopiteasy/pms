@@ -10,12 +10,30 @@
     "category": "E-commerce",
     "website": "https://github.com/OCA/pms",
     "author": "Coop IT Easy SC",
-    "maintainers": ["carmenbianca"],
+    "maintainers": [
+        "carmenbianca",
+        "robinkeunen",
+    ],
     "license": "AGPL-3",
     "application": False,
-    "depends": [],
+    "depends": [
+        "pms",
+        # We're only using a _portion_ of website_sale for our functionality.
+        # Specifically, we're using the online payment integration facilitated
+        # by website_sale. We are not using the /shop interface for buying
+        # products, because room reservations are not products.
+        #
+        # In a better world, the online payment stuff would live in a module
+        # separate from website_sale, but that is not the world in which we
+        # live.
+        "website_sale",
+    ],
     "excludes": [],
-    "data": [],
+    "data": [
+        "data/data.xml",
+        "views/templates.xml",
+        "views/pms_room_type_views.xml",
+    ],
     "demo": [],
     "qweb": [],
 }
