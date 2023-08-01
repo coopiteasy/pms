@@ -30,9 +30,11 @@
     ],
     "excludes": [],
     "data": [
+        "security/ir.model.access.csv",
         "data/data.xml",
         "views/templates.xml",
         "views/pms_room_type_views.xml",
+        "views/pms_room_type_image_views.xml",
     ],
     "demo": [],
     "qweb": [],

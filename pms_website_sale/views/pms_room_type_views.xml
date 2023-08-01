@@ -31,6 +31,11 @@
         <field name="model">pms.room.type</field>
         <field name="inherit_id" ref="pms.pms_room_type_view_form" />
         <field name="arch" type="xml">
+            <xpath expr="//group" position="before">
+                <!-- In combination with an oe_title div this could look a lot nicer, but
+                this would require some changes in pms. -->
+                <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
+            </xpath>
             <field name="class_id" position="after">
                 <field name="is_published" widget="boolean_toggle" />
             </field>
@@ -39,6 +44,11 @@
                     <field name="short_description" />
                     <field name="long_description" />
                 </group>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page name="media" string="Media">
+                    <field name="image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" options="{'create_text':'Add a Media'}" nolabel="1"/>
+                </page>
             </xpath>
         </field>
     </record>
