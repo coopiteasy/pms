@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- /room listing -->
+    <!-- /room listings -->
     <template id="rooms" name="Rooms">
         <t t-call="website.layout">
+            <t t-call="pms_website_sale.sort"/>
             <t t-set="additional_title">Rooms</t>
 
             <!-- TODO: Order by room type category (or only display one category
@@ -23,6 +24,40 @@
                 <p>Long description (TODO should go on its own page)</p>
                 <!-- t-raw is deprecated in Odoo 15. It'll do for now. -->
                 <t t-raw="room_type.long_description" />
+            </div>
+        </div>
+    </template>
+
+    <template id="sort">
+        <t t-set="list_price_desc_label">Price: High to Low</t>
+        <t t-set="list_price_asc_label">Price: Low to High</t>
+        <t t-set="name_asc_label">Name: A to Z</t>
+        <t t-set="name_desc_label">Name: Z to A</t>
+        <t t-set="sortable" t-value="[
+            (list_price_desc_label, 'list_price desc'),
+            (list_price_asc_label, 'list_price asc'),
+            (name_asc_label, 'name asc'),
+            (name_desc_label, 'name desc')
+        ]"/>
+        <t t-set="sortable_current" t-value="[sort for sort in sortable if sort[1]==request.params.get('order', '')]"/>
+        <div class="dropdown mt-2 ml-md-2 dropdown_sorty_by">
+            <a role="button" href="#" class="dropdown-toggle btn btn-secondary" data-toggle="dropdown">
+                <span class="d-none d-lg-inline">
+                    <t t-if='len(sortable_current)'>
+                        Sorting by : <t t-raw='sortable_current[0][0]'/>
+                    </t>
+                    <t t-else='1'>
+                        Sort by
+                    </t>
+                </span>
+                <i class="fa fa-sort-amount-asc d-lg-none"/>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" role="menu">
+                <t t-foreach="sortable" t-as="sortby">
+                    <a role="menuitem" rel="noindex,nofollow" t-att-href="keep('/room', order=sortby[1])" class="dropdown-item">
+                        <span t-raw="sortby[0]"/>
+                    </a>
+                </t>
             </div>
         </div>
     </template>
