@@ -57,7 +57,6 @@ class WebsiteSale(http.Controller):
             ]
 
         values = {
-            "company_currency": request.env.company.currency_id,
             "keep": keep,
             "availability_results": availability_results,
         }
@@ -89,6 +88,27 @@ class WebsiteSale(http.Controller):
                 ).id,
             }
         )
+
+    @http.route(
+        ['/room/<model("pms.room.type"):room_type>'],
+        type="http",
+        auth="public",
+        website=True,
+        # sitemap=True,
+    )
+    def room_page(
+        self,
+        room_type,
+        # category="",
+        # search="",
+        **post,
+    ):
+        # FIXME: raise NotFound if not accessible from current website (or if
+        # not published).
+        values = {
+            "room_type": room_type,
+        }
+        return request.render("pms_website_sale.room_page", values)
 
     def _search_room_types(self, post):
         domain = self._get_search_domain()

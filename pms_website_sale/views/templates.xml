@@ -20,15 +20,12 @@
             <span t-field="room_type.image_512"
                 t-options="{'widget': 'image', 'preview_image': 'image_512', 'itemprop': 'image'}"
                 class="d-flex h-100 justify-content-center align-items-center"/>
-            <h2>Name: <span t-esc="room_type.name" /></h2>
+            <a t-att-href="room_type.website_url">
+                <h2>Name: <span t-esc="room_type.name" /></h2>
+            </a>
             <p>Price: <span t-esc="room_type.lst_price" t-options='{"widget":
-            "monetary", "display_currency": company_currency}' /></p>
+            "monetary", "display_currency": website.currency_id}' /></p>
             <p>Short description: <span t-esc="room_type.short_description" /></p>
-            <div>
-                <p>Long description (TODO should go on its own page)</p>
-                <!-- t-raw is deprecated in Odoo 15. It'll do for now. -->
-                <t t-raw="room_type.long_description" />
-            </div>
         </div>
     </template>
 
@@ -64,5 +61,23 @@
                 </t>
             </div>
         </div>
+    </template>
+
+    <template id="room_page">
+        <t t-call="website.layout">
+            <t t-set="additional_title" t-value="room_type.name" />
+            <span t-field="room_type.image_512"
+                t-options="{'widget': 'image', 'preview_image': 'image_512', 'itemprop': 'image'}"
+                class="d-flex h-100 justify-content-center align-items-center"/>
+            <!-- FIXME: Everything below is not rendered correctly. -->
+            <h2>Name: <span t-esc="room_type.name" /></h2>
+            <p>Price: <span t-esc="room_type.lst_price" t-options='{"widget":
+            "monetary", "display_currency": website.currency_id}' /></p>
+            <div>
+                <p>Long description</p>
+                <!-- t-raw is deprecated in Odoo 15. It'll do for now. -->
+                <t t-raw="room_type.long_description" />
+            </div>
+        </t>
     </template>
 </odoo>
