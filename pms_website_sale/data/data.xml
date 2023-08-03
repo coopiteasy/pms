@@ -7,5 +7,11 @@
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">15</field>
         </record>
+
+        <record id="online_channel" model="pms.sale.channel">
+            <field name="name">Online</field>
+            <field name="channel_type">direct</field>
+            <field name="is_on_line" eval="True" />
+        </record>
     </data>
 </odoo>

@@ -2,10 +2,16 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from collections import namedtuple
+from datetime import datetime
+
 from odoo import http
 from odoo.http import request
 
 from odoo.addons.website.controllers.main import QueryURL
+
+# This is a mocked version of AvailabilityResult that we populate when FIXME.
+AvailabilityResult = namedtuple("AvailabilityResult", ["room_type_id"])
 
 
 class WebsiteSale(http.Controller):
@@ -32,15 +38,57 @@ class WebsiteSale(http.Controller):
             # category=category and int(category),
             # search=search,
             order=post.get("order"),
+            start_date=post.get("start_date"),
+            end_date=post.get("end_date"),
         )
-        room_types = self._search_room_types(post)
+        booking_engine = self._get_booking_engine(post)
+        if booking_engine:
+            availability_results = booking_engine.availability_results.filtered(
+                lambda record: record.room_type_id in self._search_room_types(post)
+            ).sorted(
+                # FIXME: This is incomplete.
+            )
+        # No dates provided, ergo no availability_results. Create them
+        # ourselves.
+        else:
+            availability_results = [
+                AvailabilityResult(room_type)
+                for room_type in self._search_room_types(post)
+            ]
+
         values = {
             "company_currency": request.env.company.currency_id,
-            "room_types": room_types,
             "keep": keep,
+            "availability_results": availability_results,
         }
 
         return request.render("pms_website_sale.rooms", values)
+
+    def _get_booking_engine(self, post):
+        # TODO: In the future, maybe let's cache the booking engine between
+        # requests.
+        start_date = post.get("start_date")
+        end_date = post.get("end_date")
+        if not (start_date and end_date):
+            # FIXME: resolve this problem.
+            return None
+        try:
+            # Sanitise user input.
+            start_date = datetime.strptime(start_date, r"%Y-%m-%d").date()
+            end_date = datetime.strptime(end_date, r"%Y-%m-%d").date()
+        except ValueError:
+            # FIXME: resolve this problem
+            return None
+        return request.env["pms.booking.engine"].create(
+            {
+                "partner_id": request.env.ref("base.public_partner").id,
+                "start_date": start_date,
+                "end_date": end_date,
+                "channel_type_id": request.env.ref(
+                    "pms_website_sale.online_channel"
+                ).id,
+            }
+        )
 
     def _search_room_types(self, post):
         domain = self._get_search_domain()

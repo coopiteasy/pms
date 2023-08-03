@@ -8,7 +8,8 @@
 
             <!-- TODO: Order by room type category (or only display one category
                  per web page) -->
-            <t t-foreach="room_types" t-as="room_type">
+            <t t-foreach="availability_results" t-as="availability_result">
+                <t t-set="room_type" t-value="availability_result.room_type_id" />
                 <t t-call="pms_website_sale.room_item"/>
             </t>
         </t>
