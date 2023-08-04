@@ -66,6 +66,7 @@
     <template id="room_page">
         <t t-call="website.layout">
             <t t-set="additional_title" t-value="room_type.name" />
+            <!-- TODO: Display all images instead of just one. -->
             <span t-field="room_type.image_512"
                 t-options="{'widget': 'image', 'preview_image': 'image_512', 'itemprop': 'image'}"
                 class="d-flex h-100 justify-content-center align-items-center"/>
