@@ -2,14 +2,13 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 from odoo.addons.http_routing.models.ir_http import slug
 
 
 class PmsRoomType(models.Model):
-    _inherit = ["pms.room.type", "website.published.multi.mixin", "image.mixin"]
-    _name = "pms.room.type"
+    _inherit = "pms.room.type"
 
     short_description = fields.Text(string="Short Description", translate=True)
     long_description = fields.Html(
@@ -17,16 +16,17 @@ class PmsRoomType(models.Model):
         sanitize_style=True,
         translate=True,
     )
+    website_url = fields.Char(compute="_compute_website_url_room_type")
 
-    image_ids = fields.One2many(
-        comodel_name="pms.room.type.image",
-        inverse_name="room_type_id",
-        string="Extra Room Type Media",
-        copy=True,
-    )
+    def _compute_website_url_room_type(self):
+        """pms.room.type delegates product.product, meaning we inherit
+        website.published.multi.mixin. For some reason, overwriting
+        _compute_website_url doesn't work, so we instead define our own compute
+        method.
 
-    def _compute_website_url(self):
-        super()._compute_website_url()
+        TODO: Research the above problem.
+        """
         for room_type in self:
             if room_type.id:
                 room_type.website_url = "/room/%s" % slug(room_type)
+
