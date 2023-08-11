@@ -203,7 +203,7 @@ class BookingEngine(models.TransientModel):
                         checkout=record.end_date,
                         room_type_id=room_type_iterator.id,
                         pricelist_id=record.pricelist_id.id,
-                    )
+                    )  # isn't this akin to a global variable
                     num_rooms_available = pms_property.availability
 
                     cmds.append(
