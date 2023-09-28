@@ -818,12 +818,6 @@
                         icon="fa-building"
                     />
                     <field
-                        name="pms_property_id"
-                        string="Property"
-                        enable_counters="1"
-                        icon="fa-h-square"
-                    />
-                    <field
                         name="state"
                         string="State"
                         enable_counters="1"
